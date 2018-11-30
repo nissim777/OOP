@@ -1,0 +1,107 @@
+black_knight
+
+Nissim Levy
+
+Ex2, oop 
+
+ ==================
+= File Description: 
+==================
+
+A game of spaceShip wars.  lanched by SpaceWars.java (not included).
+
+contains: 
+
+SpaceShipFactory.java
+SpaceShip.java
+HumanShip.java
+AgressiveShip.java
+BasherShip.java
+FollowerShip.java
+RunnerShip.java
+SpecialShip.java
+Drunkard.java
+
+description: 
+
+SpaceShipFactory -creats new instances of space ships. 
+SpaceShip - The abstract base_class for all space ships
+
+HumanShip - An implementation of human-controlled ship
+FollowerShip - A base_class for follower ships, which are ships that try to follow other ships
+AgressiveShip - An implementation of an agressive ship which pursues other ships and tries to fire at them
+BasherShip - An implementation of a basher ship which tries to collide other ships
+RunnerShip - An implementation of a ship which tries to run away from the fight 
+SpecialShip - An implemntation of a ship with special abilities, as will detailed ahead
+Drunkard - An implemntation of a ship with special and random abilities, as will detailed ahead
+
+=============================
+=
+Design
+=
+=============================
+
+I choosed to use SpaceShip as my base abstract class, since all the ships have lot of basic common values and
+functions, and the realtions defined are that a specific spaceship is "is a" kind of spaceship so it's more 
+suitable here to use Abstract class and not interface, which is "has a". 
+The SpaceShip class is only abstract because of one abstract method of image, which every ship must implement.
+
+Also, I saw that there is a common beheaviour and functionality to wide amount of spaceships, that they try to 
+get closer to the nearst ship in order to make their abilities so i created another super class who is the
+super class of SpaceShip and the Aggresive, Busher, Special and Drunkard. 
+
+I thought at the beginning that I should use here interface because its some ability of this ships 
+but I wanted to implement the code of following so I choosed just class, in order to avoid code repeation. 
+
+=============================
+= 
+Implementation details
+=
+=============================
+
+the main class SpaceWars, who is not included, launching the game and deals also with all the phisics and graphic
+details, some of them by invoking the suitable classes in package and some of them by checking the phisics state. 
+
+The Factory Class is in charge of creating the instances of the ship in the beginning of the game. 
+
+The main base class for ALL the ships is the spaceships is SpaceShip, and it also managing the implemention of 
+the common functions made by ships, as activating shield or shooting. This is an abstract class, because it also 
+has an abstract method, as detailed before. 
+This class inherits to: Runner, Follower 
+
+Follower is a class who implements the function of "chasing" other ships, and although it is not managing a ship 
+he is not abstract because he implements the abstract method of the super class. 
+This class inherits to: Aggresive, Basher, Specail and Drunkard. 
+
+=============================
+= SpecialShip =
+=============================
+
+ The special Ship is kind of LEECH SHIP, which drains energy from the closest ship by forcing it to 
+ activate its shield and stoping its energy regeneration. 
+
+ If the energy draining continues over 300 ticks after its reached to zero, the special
+ ship becames some kind of a leech and activating its parasite ability, killing the other ship slowly
+ and converts each life point it has into 2 life points for itself. 
+
+ The special ship has special cool green look, and when he activates his parasite ability he suddenly
+ "jumps" on the poor victim ship and paralises him. 
+
+=============================
+= DrunkardShip =
+=============================
+
+  The drankardShip moves like crazy in rapid speed all over the screen. that's is't clear to 
+  anyone where and why, but the only thing that is sure that you better kill him as soon as possible,
+  because every round there is a chance of 1:100 for appearnce of an powerfull invisble Ally, 
+  which cannot be seen and just shots everyone. 
+  
+  The invisble Ally is INDESTRUCTABLE and the only way to kill him is by killing the DrunkardShip itself. 
+  The problem is.. that every shot of the Invisble Ally towards the DrunkardShip increases his life in 2 points.
+  so.. from the minute that the invisble Ally appears (or not..) the game becomes very hard. 
+  
+======================
+= Special Comments =
+======================
+
+BASED on my excresise in 2013.

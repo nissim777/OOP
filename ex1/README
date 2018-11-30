@@ -1,0 +1,67 @@
+black_knight
+
+200316396
+Nissim Levy
+
+Ex1, OOP  
+
+
+=============================
+=      File description     =
+=============================
+
+Competition.java - the main class, managing a sequence of NIm competitions between two players from choosen type.
+Board.java - represents a board of the Nim game, which consists of number or row and number of sticks in each row. 
+Player.java - represents implemention for the different types of players: random, smart, heuristic and human.
+each one differ in the tatics he uses for playing the game.
+Move.java - represents single move choosen by player, according to the coordinates choosen.
+README - this file
+
+=============================
+=          Design           =
+=============================
+
+I implemented the game according to the given API, where Competition is the main class invoking the suitable other classes 
+in order to manage the game flow. 
+the other classes represents a single move, suitable tactic for different players, and the board itself. 
+
+=============================
+=  Implementation details   =
+=============================
+
+Board class is already given, and Move and Competition is a simple implemention of the given API. 
+
+in Player class, I prefered to check for illegal actions choosen by Random player in the method itself, 
+which is more efficient than reporting invalid move by the checking legal method of the Board and retry.
+tactic for Smart player is detailed ahead.
+
+=============================
+=    Answers to questions   =
+=============================
+
+tactic for Smart Player: 
+
+Since we dealing with a random Player, we would like to save the longest sequence of vacant sticks  
+to the end, which will give us more space for dealing with the random actions. 
+
+In addition, a one-length sticks are good for us, because it gives us better control on the game flow, 
+because we can choose if to place there a stick or not, while the random player act randomly, 
+so we won't fill them.
+
+so the tactic I choosed is to COUNT every time before acting the number of single size sticks, 
+and than choose to fill the minimum sequence size that is longer than 1, AS LONG AS there is another 
+long sequence left (with i called maxGap), equel or longer than the minimum sequence. 
+
+after a while there will stay only one long sequence and some amount of single size vacant sticks, 
+and than I will act like that: 
+
+1. if the number of the single sticks that left is odd, i will fill the entire longest sequence, 
+and then win the game because the random player is forced to fill the vacant single sticks
+one by one.   
+
+2. if the number of the single sticks that left is even, i will fill almost the entire longest sequence BUT with 1 
+vacant stick left, and then there will be again an odd number of one size sequences only and the game is over.
+ 
+On that way we get about 93%-94% chance to beat the random player. 
+
+

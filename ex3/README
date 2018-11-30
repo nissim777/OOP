@@ -1,0 +1,294 @@
+black_knight
+
+Nissim Levy
+
+EX3, oop 
+
+ ==================
+= File Description: 
+==================
+
+Excersice:
+An implemention of 2 Hash tables, chained and open, and Anaylazing results for time needed in order to 
+perform certain actions on the 2 collections mentioned and another 3 collections types. 
+
+contains: 
+
+SimpleHashSet.java - super class for the two different Hash tables
+MAIN methods:    abstract: add, delete, contains, rehashtable, initialize. 
+                 regular : manage size, change size, FixedHashValue
+
+ChainedHashSet.java - implementaion for chained hash table
+                      MAIN methods: add, delete, contains, rehashTable, transferValues
+
+OpenHashSet.java - implementation for open hash table
+                    MAIN methods: add, delete, contains, rehashTable, transferValues, probe
+
+LinkedListWrapper.java - a wrapper for LinkedList, used in the chained hash table for implementing array
+                         of linked list.
+                         Main methods: implements the methods of SimpleSet: add, contains, delete, size
+
+
+CollectionFacadeSet.java - a Facade class helps us orgenize the other 3 sets during the analysis process
+                           Main methods: getList, setList
+
+SimpleSetPerformanceAnalyzer.java - measures time for entering data and performing actions on different sets 
+                                    MAIN methods: insertData, containsWord
+
+RESULTS file 
+QUESTIONS file
+README this file
+
+=============================
+=
+Design
+=
+=============================
+
+Before starting to write the code, I have examined the common functions belong to both Hash Sets, as like 
+resizing the table, and the functions implemented differently because of the totally different structure 
+of each Hash Table.
+  
+I decided that actions needed to be implemented completely differently as like add, delete and contains 
+will be implemented seperatly and stay abstract in the super class, but the managing and decisions 
+about size and updating necessary values will be done in the super class. 
+
+I also added several abstract protected methods in the super class, that I thought I need to enforce 
+the inheriting classesto perform in order to manage efficient implementation by them. 
+
+design technical decisions: 
+
+1)Adding method:
+When adding a new value to the table, there are two types of adding actions:
+Adding a new value, and Adding old values when rehashing.
+Therefore i have decieded to use a helper adding method because it is pointless and more important not
+efficient and can cost time to recheck rehashing when entering the old values back to table.
+
+2) Steps for Incresing efficienty: 
+a) I used <<= for resizing the table and & for modulo as explains, because it critical for more rapid hashing,
+   especailly in the probing proccess.
+b) used & sign instead of modulo and abs
+
+c) as mentioned in 1, didn't checked contains for old values.
+
+d) reliezed that i should notice not copy also the deleted refernce in the OpenHash table when resizing
+ 
+3) in OpenHashTable, in order to keep maximum understandable and elegant design i used switch-case, and also
+wanted to perform the all probing proccess in one method, but there are few side-cases as explained for the
+equals and == about the deleted refernce, which created subtile changes in code and checking.  
+
+=============================
+= 
+Implementation details
+=
+=============================
+
+SimpleHashSet (not included) implements the SimpleSet interface, which defines actions needed to be 
+performed by the 5 collections being measured, as like adding, deleting and checking if some element exists.
+
+SimpleHashSet is a super class for two sub classes, OpenHashSet and ChainHashSet, and managing the common
+actions as performing the resizing check after every new element add or old elemnent deletion being made,
+and managing the new rehashing proccess in case changing in size is really needed. 
+
+ChainedHashSet and OpenHashSet works similary, the add method was inherited is spiltted to contains check 
+and actual adding action, in order to prevent unneccery check for duplicates in the old values transfering 
+proccess during rehashing. The other method are implemented according to suitable structure of each table.
+  
+The LinkedList wrapper is created in order to creat a subtitude for Array of Linked List, which is not
+allowed in java, and being used in ChainHashSet. 
+
+The SimpleFacadeSet helps us during the polymorphism being used in the Analyzing process, and unify the 
+different actions of the different sets for only the common actions of add, delete, and contains which 
+are relevant now, making it simpler for both us and the user.
+
+The Analyzer is the class with the main() functions, and he measures time for entering data and performing 
+contains checks. 
+
+=============================
+=
+Answers for questions & Analysis
+=
+=============================
+
+- I implemented ChainedHashSet using the wrapper option, and added setter and getter in order to access the 
+wrapped LinkedList in encapsulating way.
+
+- I implemented the deletion mechanism with a final variable of an empty string - "", and in my checks i 
+had performed the suitable checks for refernce or content for the give case of action.
+for exemple, during the deletion proccess, i also made sure its not "=", means we are not talking about
+the deletion reference sign.
+
+RESULTS ANALYSIS
+
+Insertion data1
+
+ChainedHashSet_AddData1 = 51816
+OpenHashSet_AddData1 = 104498
+TreeSet_AddData1 = *64*
+LinkedList_AddData1 = 51500
+HashSet_AddData1 = 80
+
+Insertion data2
+
+ChainedHashSet_AddData2 = 321
+OpenHashSet_AddData2 = 24
+TreeSet_AddData2 = 58
+LinkedList_AddData2 = 28148
+HashSet_AddData2 = *16*
+
+
+comparing insertion times  (Data1 vs Data2)
+
+ChainedHashSet_AddData1 = 51816  vs 321
+OpenHashSet_AddData1 = 104498 vs 24
+TreeSet_AddData1 = 64 vs 58
+LinkedList_AddData1 = 51500 vs 28148
+HashSet_AddData1 = 80 vs 16
+
+contains "hi" after data1
+
+ChainedHashSet_Contains_hi1 = 4784
+OpenHashSet_Contains_hi1 = 2049
+TreeSet_Contains_hi1 = 1688
+LinkedList_Contains_hi1 = 1041149
+HashSet_Contains_hi1 = *1129*
+
+contains "-13170890158" after data1
+
+#the data structures initialized with data1
+ChainedHashSet_Contains_negative = 1078238
+OpenHashSet_Contains_negative = 1790298
+TreeSet_Contains_negative = 2721
+LinkedList_Contains_negative = 1137220
+HashSet_Contains_negative = *980*
+
+"hi" vs ""-13170890158"
+
+ChainedHashSet_ = 4784 vs 1078238
+OpenHashSet_ = 2049 vs 1790298
+TreeSet_ = 1688 vs 1790298
+LinkedList_ = 1041149 vs 1137220
+HashSet_ = 1129 vs 980
+
+contains "23" after Data2
+
+ChainedHashSet_Contains_23 = 741
+OpenHashSet_Contains_23 = *619*
+TreeSet_Contains_23 = 52561
+LinkedList_Contains_23 = 1434
+HashSet_Contains_23 = 39972
+
+contains "hi" after Data2
+
+ChainedHashSet_Contains_hi2 = 1749
+OpenHashSet_Contains_hi2 = 2145
+TreeSet_Contains_hi2 = 32469
+LinkedList_Contains_hi2 = 855668
+HashSet_Contains_hi2 = *938*
+
+"23" vs "hi"
+
+ChainedHashSet_ = 741 vs 1749
+OpenHashSet_Contains_23 = 619 vs 2145
+TreeSet_Contains_23 = 52561 vs 32469
+LinkedList_Contains_23 = 1434 vs 855668
+HashSet_Contains_23 = 39972 vs 938
+
+I will try to Analys results, according to the different structurs of the collections:
+
+INSERTION PROCCESS:
+I found it suprsizing that the TreeSet is so rapid in adding elements, because we have learnt that he makes
+it in complexibilty of O(log n), while the other make add procces in O(1) usually (actual, avarage
+or AMORTIZED).
+
+But i think it might be because the Tree will be pretty balanced, since there are minus and plus every time 
+between the different contents in the values, and the numbers are orgenized in an ascending order so the
+log n time will be efficient relatively. but its still surprizing compare to the O(1). 
+
+and then after thinking again I realized that maybe as my own add functions
+the other collections also check for duplicates as my own implemetations of add, because they are set,
+excluding LinkedList, so I looked in theirs API and it reallychecks for duplicates. 
+that can explain the results because the other collections tends to do contains in O(n) and the Tree in
+O(log n) which we said in balanced tree is more efficient. 
+
+The LinkedList is very slow during the proccess of both data1 and data2. that wasnt surprising looking at 
+its API because its says it moving the new elemnt every time to the end of the linked list, although it 
+doesnt check for duplicates. we can always say that he is the only collection which does try to make actions 
+to spread its elemnts efficiently by hash coding or tree structure, so thats not surprising. 
+
+Also, it can be seen that OpenHash set is less efficient then Chainedset in adding long and a little
+unordered words as like in data1, but when the words are ordered and more short it can be done more
+efficent than ChainedHashset. we should also think why:
+
+So first of all, the big difference in data1 and data2 for the ChainedSet has to do for my opinion because
+cells are DIVIDED MORE EQUALY and balanced with data2 in ChainedSet. we do not make some probing proccess in 
+Chaindhashset so the efficiency in that kind of collection is must be because of the length of the 
+LinkedLists saved inside it, as we saw about the linked list that is very slow to perform actions as contains
+on a long Link List because its not meant to be reached simply by index as like as ArrayList collection.
+
+if that divided more equaly it also explaines why in data2 the open table is less efficient than the 
+chained, probably because the infect of similar hash codes is not good for the Open hash table as it good for 
+the Chained hash table because it says more probing.
+
+there is also ofcourse a difference with the two collections (of Open and Chained) because of the resizing
+proccess when we creat a new string of array VS creating a new delegation wrapping the linked list array, 
+which must be more heavy proccess. 
+
+Thats also explains why there is not a big difference between the time taking for the linked list to perform
+the Insertion, because it DOESNT CARE about the hash code. thats probably why there is not a big difference 
+between the Tree either, because for it also the hash code is no factor, just the relativenns between elements
+sizes (which is more balanced in data2)
+
+CONTAINS PROCCESS
+I thought at first mistakely, that if data1 and data2 are in the same length so there is not
+suppose to be difference between them in the contains action. but it doesnt like that, and 
+that make sense because ofcourse the action for contains will work less efficintly on a tree 
+for exemple if it less balanced. also, maybe "23" is located in totally different place
+(more close, more far) than another word, "hi" for exemple. 
+
+So, lets look about results:
+
+"hi" vs ""-13170890158"
+
+ChainedHashSet_ = 4784 vs 1078238
+OpenHashSet_ = 2049 vs 1790298
+TreeSet_ = 1688 vs 1790298
+LinkedList_ = 1041149 vs 1137220
+HashSet_ = 1129 vs 980
+
+we can see first that for that in the 3 upper collections there is a very big gap in results. that 
+might be because a word has usually different hashing code than a number, so there will be more efficient
+search before we get to null. we can see that in HashSet implemented by java that is not the case, the times
+are similar to our "hi" search but are more compare to the number search. that is surprising.
+
+About TreeSet, I think in the search process it can see immediatly that it is about letter and not a number,
+so all the comparing process being very fast because it goes immidatly to next value (always smaller or always 
+bigger). thats unlike the long number which he must compare in real every time. 
+
+about linkedList, the results are very similar, and that maybe because it will go anyway and they are really
+slow, maybe becuase it will go anyway on the ENTIRE list and whats takes its time is not the comparation
+process but the iteration process until the end. 
+
+If we go back to TreeSet, we can see it super slow in the number comparsion. and its not only because now its
+about number and not letter, because in the next compare phase (after data2 insertion) we can relize suddenly
+that the time is very fast relatively also for the number. so it must be because there the number is INSIDE
+the set and is being found very fast, and now it is not inside and he must go all over its depth which might
+be even O(n) in certain unbalanced cases. 
+
+"23" vs "hi" 
+
+ChainedHashSet_ = 741 vs 1749
+OpenHashSet_Contains = 619 vs 2145
+TreeSet_Contains = 52561 vs 32469
+LinkedList_Contains = 1434 vs 855668
+HashSet_Contains = 39972 vs 938
+
+here we can relize it takes the Hash set of the java implemntion very long time, this is also very surprising
+result. and that LinkList is taking very fast time - its not because its efficient in searching, it just 
+becuase the number is found very fast. 
+
+WHICH SET YOU WILL CHOOSE FOR WHICH ACTION:
+
+according to results, I would choose TreeSet or Java HashSet for adding, 
+and HashSet of java for contains. 
+

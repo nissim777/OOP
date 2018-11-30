@@ -1,0 +1,23 @@
+black_knight
+
+200316396
+Nissim Levy
+
+Ex0, OOP  
+
+=============================
+=      File description     =
+=============================
+
+Store.java - contains an implementation of a store, managing the selling and buying of products for customers.
+Customer.java - contains an implementation for customer, managing buying requested products according to balance. 
+ProductType.java - contains an implementation for specific Products, defining their price for the customer and store.
+README - this file
+
+
+=============================
+=  Implementation details   =
+=============================
+
+I implemented the classes according to the given API, while the Store class functions as the main class invoking 
+the suitable methods in the Customer and ProductType classes.

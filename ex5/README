@@ -1,0 +1,209 @@
+black_knight
+
+ex5, OOP
+
+================================================================
+						
+						File Description						
+================================================================
+
+	A program which recieves a command file divided into sections , consists of filter and order pair, 
+	and prints files in given directory after filtering them, in a certain order. This printing action is 
+	being repeated each time for each filter-order section.
+ 
+	================================================================
+						
+		List of submitted files (divided into packages)	
+	================================================================
+	
+	1) filescript (a package contains the main classes of the program)
+	----------------------------------------------------------------------------------------------------------
+        (*) myFileScript.java			- Serves as the manager of the entire program, receiving the command
+                                    	file and the directory contains all files. This class invokes the
+ 										Parser class in order to read from command file and divide into
+										sections, then prints all sections one by one.
+
+		(*) Parser.java        	 	- Parses the command file and creates section objects consisted of
+										pairs of filter and order
+
+		(*) Section.java        	 	- Presents the section object which contains filter and order objects,
+										parsed from the corresponding lines in the command file
+
+		# Exceptions:
+        (*) ParserException.java		- An exception thrown if the command file format is illegal, 
+										means it does not contain pairs of FILTER-ORDER words.
+			     
+ 	2) filter
+	----------------------------------------------------------------------------------------------------------
+        (*) Filter.java					- An interface being implemented by the variaty of filter objects. 
+										contains the method isPass
+
+        (*) FilterFactory.java			- Creates the correspond filter according to a correspond command line
+
+		#Filter classes:
+        (*) PropertiesFilter.java		- A super class for: executable, hidden and writable filters.
+                                        its sub-classes only check for existence of certain property, and
+										it matches it with the permission asked.
+
+			(*) ExecutableFilter.java   - A file passes this filter iff it is excutable
+			(*) HiddenFilter.java       - A file passes this filter iff it is hidden
+			(*) WritableFilter.java     - A file passes this filter iff it is writable
+
+		(*) SizeFilter.java             - A super class for: GreaterThan, Between and SmallerThan filters.
+													
+			(*) GreaterThanFilter.java  - A file passes this filter iff its size is greater than given number
+			(*) SmallerThanFilter.java  - A file passes this filter iff its size smaller than given number
+			(*) BetweenFilter.java      - A file passes this filter iff its size is between two given numbers
+
+		(*) TextFilter.java             - A super class for: File, Contains, Prefix, Suffix
+													
+			(*) FileFilter.java 	    - A file passes this filter iff its name is equals given string
+			(*) ContainsFilter.java  	- A file passes this filter iff its name is contains given string
+			(*) PrefixFilter.java       - A file passes this filter iff its prefix is equals given string
+			(*) SuffixFilter.java       - A file passes this filter iff its suffix is equals given string
+
+		(*) AllFilter.java              - All files passes this filter
+		
+		(*) NegFilter.java         		- Filter which passes the opposite files being filtered by original
+										filter
+		# Exceptions:
+		(*) FilterException             - An exception thrown when the line decribing the specific filter is 
+										illegal. in such a case a Warning will be printed, and a deafult
+										filter will take place.   
+ 	3) order
+	----------------------------------------------------------------------------------------------------------
+    
+	  (*) Order.java					- An interface being implemented by the variaty of filter objects. 
+										extend Compartor, in order to sort files efficienly by requested order
+
+      (*) OrderFactory.java				- Creates the correspond order according to a correspond command line
+
+	  #Order classes:
+      (*) AbsOrder.java					- Orders files by their name (absolute path)
+	
+  	  (*) TypeOrder.java				- Orders files by their type. in case equal: Abs order		
+
+	  (*) SizeOrder.java				- Orders files by their size. in case equal: Abs order
+
+	  (*) ReverseOrder.java             - Orders files by reverse an existing order
+
+	   # Exceptions:
+	  (*) OrderException             	- An exception thrown when the line decribing the specific order is 
+										illegal. in such a case a Warning will be printed, and a deafult order
+										will take place.  
+
+	6) General files
+	----------------------------------------------------------------------------------------------------------
+   		(*) QUESTIONS.txt               -   file with questions and answers.
+		(*) README.txt					-	This file.
+
+================================================================
+							
+							Design
+================================================================
+	
+	#Structure:
+	
+	The MyFileScript file is the manager of the entire program, validating correct and suitable input args,
+	ivoking the parser in order to read lines from command file and turn them into section objects,
+	and finally print files in destination directory according to sections
+
+	mainly uses: Parser, Section
+
+	The Parser is in charge of reading and parsing the command file lines, and after validating correct format
+	uses the factory of filter and order for creating the suitable section object  
+	
+	mainly uses: Section, FilterFactory, OrderFactory
+
+	The Section is designated to hold the pairs of filter and order objects, and for also has method for 
+	printing the section (Warnings and files), invoked by the MyFileScript class.
+
+	mainly uses: Filter, Order
+
+	The different filters implement the filter interface, in order to use the factory and maintain the 
+	single choice principle. They divided into 3 groups, therefore have 3 different superclasses implement
+	Filter, helps to use common properties and save code repeatation. 
+
+	The different orders also implement a common order interface, in order to arrange them and use factory
+	as mentioned before. 
+
+	
+
+	#General design:
+
+	(1) The program was designated keeping the Decomposability, Continiuty and Understandability principles. 
+	Each module: FileScript, Parser, Section, Filter and Order, is easy to understand alone, and the 
+	writing of filter and order object, then unify them into sections, and then creat them from file and 
+	print implement the Decomposibility principle.
+	
+	(2) The use of a factory for the filter and order objects helps use maintain the single choice principle,
+	because adding or removing a filter only influence this class, also connected to principle of open/close
+	because we can always add additional filter to our filter collection without influent the other filters
+
+	(3) Continuity -using factory also makes sure that a little change in program will influent only a little
+	part in the entire program.
+
+	This kind of design also helps use to locate and solve bugs easily, when every class has its designated
+	purpose and a we can isolate sometimes in which structure part we have the problem if occured.
+
+	(4) arranging files in packages helps use to controle classes permissions (for exemple for methods in
+	 Section class), and maintain order.
+
+	(5) also arranging filters in 3 abstract super classes helps avoid code repeatation and perform
+	efficiently common functions for filters. 
+
+	(6) the order interface forces implemented class to implement the Compare() method, in order to use it
+	later on in the order proccess (using Sort on the collection contains the already filtered files)
+
+	(7) using decorator in the Neg filter and Reverse order classes (using delegation and object composition)	
+
+================================================================
+					
+					Implementation Issues
+================================================================
+
+	(1) I choosed to implement the parsing proccess into collection with an ArrayList, because using this
+	collection i could have an easy access by their index, being used in the proccess of validating correct
+	file format. also used in order to print the specific line in case of a Warning.  
+	
+	(2) prefered to check for a validate format (if there is type 2 errors) before beginning the dividing into
+	sections proccess, because i found it more logicly right and efficient in case will be an error.
+	however, in case there is no error that will be a bit slower.
+
+	(3)	the Section object also contains filter and order (warning) lines, being initialized and used only 
+	in case of a warning.
+
+	(4) choosed to perform the printing warning part also in Section class, because this is the class who 
+	communicate with filter and order and can replace them with default filter and order after the warning
+	printing.
+
+	(5) Section has methods being used also by other classes in its packages, therefore their permission
+	is the package permission, but not public or protected.  
+	
+	(6) the divide into 3 super classes in the filter part, is done for arrange them into groups, also
+	for send sub classes of TextFilter a String instead of a file, 	
+	getting from sub classes of PropertiesFilter only information if the property is exist or not,
+	while the super class checks for requested permission, and in Size class in for storing the limits
+	and the change rate between kb and bytes.  
+		
+
+	Error handling
+	===========================
+
+	(1) critical errors, which cause the program to stop and print ERROR (type 2 errors), are being 
+	thrown by MyFilterScript in case of invalide args (wrong number of arg, correpted file e.g) 
+	
+	This kind of errors also being thrown by the Parser, therefore i divided the Parsing process into two 
+	parts, validiating correct format - if not an Parser Exception will be thrown back to MyFilterScript.
+
+	(2) Warnings - errors which are not critical and only cause a warning are located while sending this line
+	to the factory of filter/order, called FilterException or OrderException, thrown back to Parser in the 
+	creating process, and being handeled immidately in the Parser class by initialize the filter to	null and 
+	set a warning for it. 
+
+	Then, after the warning being printed (in the Section class), another default filter replaces this filter.
+	
+
+
+			----------------------------------------------------------------------------------------
+

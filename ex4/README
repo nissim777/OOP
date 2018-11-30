@@ -1,0 +1,94 @@
+black_knight
+
+Nissim Levy
+
+Ex4, oop 
+
+ ==================
+= File Description: 
+==================
+
+An implemention of a class which presents an AVL tree, includes primary methods as add(), contains() and 
+delete() , each with its correspend helper methods and a ineer class - Node class, and a local class for 
+the iterator. 
+
+I used single class : AvlTree.java
+
+ ==================
+= Class Workflow: 
+==================
+
+method ADD:
+    helper methods: recursiveAdd - manages the actions of searching for element, adding and checking for
+                                   violation, recursively.
+                    actualAdd - performs operations required in order to add the given value 
+method DELETE:
+    helper methods: searchNode - searches if there is node with the given key
+                    manageDelete - decides which kind of deletion needed - 
+                                   simple (none or 1 son for deleted key) or complex (2 sons)
+                    simpleDelete - performs the operations needed in order to delete the node
+                    complexDelete - activating the methods findSuccessor & switchSuccessor:
+
+                                  findSuccessor - finds the successor in the sub tree of deleted node,
+                                                  in order to replace it
+                                  switchSuccessor - performs the actual operations needed in order to switch
+                                                   the deleted key with his successor  
+                    recursiveBalanceCheck - checks for violations after deletion proccess
+
+COMMON METHODS to Add and Delete:
+		checkBalance - comparing heights of 2 sons in order to decide if violation occurred
+        violationAlert - checks which type of violation happend
+        manageViolation - activates the left or/and right rotation according to suitable violation type 
+        rotateLeft - implements the rotation left 
+        rotateRight - implements the rotation into right 
+
+ 
+=============================
+=
+Design & Implementation details
+=
+=============================
+
+I choosed to implement all methods in one class, because the Node object is only for use of the tree
+class so i prefered to implement it as a private (nested) class inside AvlTree class, this way i can use
+its datamembers freely without using getters and setters. 
+
+my design for the add method, is to make a main recursive method who does the comparing and adding operations
+and in the back call of the recursive method also the check for balance. i found it more elegenat this way.
+
+I thought in the beginning to unify the delete and add operations in a one big recursive method, but when 
+i started to implement it i have seen there are a lot of differences between different cases - for exemple
+for the delete operation we perform the action when we find matching value, for the add we stop searching.
+
+I could implement it like that and thought it will be also elegant - but as said there were a lot of different
+conditions and the understandibilty wasnt good enought for my opinion, so finally i choose to focuse add in 
+its own method and delete in seperate method.
+
+the delete method was implemented differently then the add method, and with more helper methods, mainly 
+because i was splited the deletion operation in two cases, simple and complex delete (depends on the number
+of sons).
+
+the workflow is different from the add method, the search action and checking for balance done in its own 
+different methods, because of the more methods i wanted to increase the modularity and try implement it
+differently, but i am totally aware to the fact it was possible easily to implement it similar to add method,
+and changing design for it is not very complicated but in this method i choosed to focus on the composability 
+of this modularity design, also because it contains more required helper methods then add.
+
+I think the advantage of my add imlemention is more elegant and "smart" design, comparing to delete
+implemntation which was more focused on ‫‪Understandability‬‬ and Composabilty.
+
+my design for the iterator was using a local class inside the corresponed method, because all the 
+methods concerns the iterator and belongs only to the method activating it, and no need for them in other 
+places in class, this way the code is more orgenized and improve readability and modularity.
+  
+======================
+= Answer to question =
+======================
+
+Order for numbers: 5,3,8,2,7,10,4,1,6,9,11,12
+
+explantion: i created first the structure for minimal nodes balanced tree of height 4, placed numbers in 
+the suitable locations and then thought about the insertion order which won't violate the balance in each
+stage - which was to creat a structure of a minimal-node-balanced-tree for every height begins in 0, and 
+adding nodes to it in order to get the next height minimal balanced tree.
+
